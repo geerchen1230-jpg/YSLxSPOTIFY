@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YSL x Spotify – Noor’s AI Customer Journey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --gold: #d4af37;
+      --lavender: #c09cff;
+      --bg-dark: #050308;
+      --bg-card: #151320;
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --text-main: #ffffff;
+      --text-muted: #bbbbcc;
+      --accent-spotify: #1db954;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #3b2568 0, #050308 50%, #020108 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 18px 48px;
+    }
+
+    header {
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 34px);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      line-height: 1.3;
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    .lavender {
+      color: var(--lavender);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 640px;
+    }
+
+    h2 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+    }
+
+    h2 span {
+      color: var(--gold);
+      margin-right: 8px;
+    }
+
+    .card {
+      background: rgba(10, 9, 20, 0.96);
+      border-radius: 16px;
+      border: 1px solid var(--border-subtle);
+      padding: 18px 18px 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .persona-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .persona-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .persona-tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(8, 7, 18, 0.9);
+    }
+
+    .persona-body {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .mini-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .mood-card {
+      background: radial-gradient(circle at top, rgba(192, 156, 255, 0.2), rgba(8, 6, 16, 0.95));
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 14px 14px 12px;
+      font-size: 12px;
+    }
+
+    .mood-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .mood-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), var(--lavender));
+    }
+
+    /* Journey layout */
+    .journey-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .step-btn {
+      width: 100%;
+      background: transparent;
+      border-radius: 999px;
+      padding: 9px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--text-muted);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+    }
+
+    .step-btn span.index {
+      font-size: 11px;
+      opacity: 0.9;
+      margin-right: 6px;
+    }
+
+    .step-btn span.label {
+      flex: 1;
+      text-align: left;
+    }
+
+    .step-btn.active {
+      background: radial-gradient(circle at left, rgba(212, 175, 55, 0.4), rgba(12, 9, 25, 0.95));
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .step-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .journey-caption {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .stage-title {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .stage-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .stage-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .stage-block {
+      background: rgba(7, 6, 14, 0.96);
+      border-radius: 12px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stage-block h4 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stage-block p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .email-preview {
+      background: radial-gradient(circle at top, #1f1b35, #080611);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 10px 12px 12px;
+      font-size: 11px;
+    }
+
+    .email-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+    }
+
+    .email-subject {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .email-body {
+      color: var(--text-main);
+      font-size: 11px;
+    }
+
+    .email-tag {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .email-tag .dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    /* AI triggers grid */
+    .trigger-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .trigger-card {
+      background: rgba(8, 7, 18, 0.96);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 10px;
+      font-size: 11px;
+    }
+
+    .trigger-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .trigger-title {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .trigger-body {
+      color: var(--text-muted);
+    }
+
+    .key-points {
+      font-size: 12px;
+      color: var(--text-muted);
+      list-style: disc;
+      padding-left: 18px;
+      margin-top: 6px;
+    }
+
+    footer {
+      margin-top: 28px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 780px) {
+      .persona-layout,
+      .journey-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span class="gold">YSL</span> × <span class="lavender">Spotify</span><br>AI-Powered Customer Journey</h1>
+      <p class="subtitle">
+        Instead of blasting one campaign to everyone, this experience follows a single person — <strong>Noor</strong> —
+        across her full journey with the brand. At each stage, AI reads signals from her Spotify behaviour and triggers
+        a different kind of message.
+      </p>
+    </header>
+
+    <!-- Persona -->
+    <h2><span>01</span> Persona · Who Noor Is</h2>
+    <section class="card persona-layout">
+      <div>
+        <div class="mini-label">Primary persona</div>
+        <div class="persona-title">Noor · Soft Night Listener</div>
+        <div class="persona-tagline">Fragrance as a quiet ritual, not a loud statement.</div>
+        <div class="chips">
+          <div class="chip">24 · Qatari</div>
+          <div class="chip">Works in cultural communications</div>
+          <div class="chip">Night-time Spotify listener</div>
+          <div class="chip">Values subtle luxury</div>
+        </div>
+        <p class="persona-body">
+          Noor doesn’t chase hype drops. She listens to slow R&amp;B and indie at night, often on repeat while unwinding
+          after work. She uses perfume to feel grounded and confident, especially in intimate or professional settings.
+          For her, a campaign only works if it feels personal, calm, and emotionally resonant — not pushy.
+        </p>
+      </div>
+      <div>
+        <div class="mini-label">How Spotify “sees” Noor</div>
+        <div class="mood-card">
+          <div class="mood-row">
+            <span>Tempo: mostly slow · mid energy</span>
+            <span>Skips: low</span>
+          </div>
+          <div class="mood-row">
+            <span>Listening window: 21:30–01:00</span>
+            <span>Playlists: “Late night focus”, “Soft R&amp;B”</span>
+          </div>
+          <p style="margin-top: 8px;">
+            From these signals, AI recognises Noor as an emotionally driven listener who prefers depth over noise.
+            That becomes the foundation for her entire YSL x Spotify journey.
+          </p>
+          <div class="mood-tag">
+            <span class="dot"></span>
+            <span>AI tag: “Noor-type” · emotional, reflective, ritual-oriented</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Journey -->
+    <h2><span>02</span> Noor’s Customer Journey</h2>
+    <section class="journey-grid">
+      <!-- Left: stages -->
+      <div>
+        <div class="card">
+          <div class="mini-label">Journey stages</div>
+          <button class="step-btn active" data-step="0">
+            <span class="index">01</span>
+            <span class="label">Awareness · First contact via Wrapped-style story</span>
+            <span>→</span>
+          </button>
+          <button class="step-btn" data-step="1">
+            <span class="index">02</span>
+            <span class="label">Interest · AI recognises Noor’s pattern</span>
+            <span>→</span>
+          </button>
+          <button class="step-btn" data-step="2">
+            <span class="index">03</span>
+            <span class="label">Consideration · Emotional email, not hard sell</span>
+            <span>→</span>
+          </button>
+          <button class="step-btn" data-step="3">
+            <span class="index">04</span>
+            <span class="label">Decision · Invitation instead of discount spam</span>
+            <span>→</span>
+          </button>
+          <button class="step-btn" data-step="4">
+            <span class="index">05</span>
+            <span class="label">Retention · Post-purchase ritual & playlist</span>
+            <span>→</span>
+          </button>
+          <p class="journey-caption">
+            Each stage combines three layers: <strong>what Noor feels</strong>, <strong>what the brand sees</strong>,
+            and <strong>what AI triggers next</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: dynamic stage content -->
+      <div class="card" id="stageContent">
+        <!-- Filled by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Customer Journey concept explanation -->
+    <section class="card">
+      <div class="mini-label">Customer journey · definition</div>
+      <p style="font-size: 13px;">
+        A <strong>customer journey</strong> is the full path Noor takes with the brand — from first discovery to
+        long-term loyalty. Instead of asking “What do we want to send?”, we ask “Where is Noor in her story, and what
+        does she need from us now?”
+      </p>
+      <ul class="key-points">
+        <li><strong>Awareness:</strong> “Who are you?” · Noor just notices the brand.</li>
+        <li><strong>Interest:</strong> “This feels relevant.” · She starts exploring.</li>
+        <li><strong>Consideration:</strong> “Could this be for me?” · She compares, hesitates.</li>
+        <li><strong>Decision:</strong> “I’m ready.” · She chooses whether to buy.</li>
+        <li><strong>Retention:</strong> “This fits my life.” · She builds a long-term habit.</li>
+      </ul>
+    </section>
+
+    <!-- AI Triggers -->
+    <h2><span>03</span> AI Triggers · What the System Reads</h2>
+    <section class="card">
+      <p style="font-size: 13px; margin-bottom: 6px;">
+        Behind the scenes, AI turns Noor’s tiny behaviours into signals. The goal is not to stalk her, but to
+        <strong>time the emotion</strong>: to send the right feeling at the right moment.
+      </p>
+      <div class="trigger-grid">
+        <article class="trigger-card">
+          <div class="trigger-label">Signal 01</div>
+          <div class="trigger-title">Listening behaviour</div>
+          <p class="trigger-body">
+            Slow, late-night tracks played on repeat signal emotional attachment. AI chooses softer language, fewer
+            exclamation marks, and emails scheduled after 21:00 instead of during work hours.
+          </p>
+        </article>
+        <article class="trigger-card">
+          <div class="trigger-label">Signal 02</div>
+          <div class="trigger-title">Interaction depth</div>
+          <p class="trigger-body">
+            If Noor scrolls through the Scent Wrapped page and completes a short quiz, AI treats her as
+            “high-intent, low-pressure”, triggering storytelling emails instead of aggressive promotional codes.
+          </p>
+        </article>
+        <article class="trigger-card">
+          <div class="trigger-label">Signal 03</div>
+          <div class="trigger-title">Cart & hesitation</div>
+          <p class="trigger-body">
+            Adding a fragrance to cart and leaving signals hesitation. For Noor, AI suggests a small, intimate
+            invitation (sample, early access) instead of shouting “20% OFF!!!”.
+          </p>
+        </article>
+        <article class="trigger-card">
+          <div class="trigger-label">Signal 04</div>
+          <div class="trigger-title">Post-purchase engagement</div>
+          <p class="trigger-body">
+            If she opens ritual tips and saves the curated playlist, AI shifts from selling to nurturing: more guidance,
+            more mood-based content, fewer calls to buy again immediately.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Key takeaway -->
+    <section class="card">
+      <div class="mini-label">Key takeaway</div>
+      <p style="font-size: 13px;">
+        For Noor, this is not an email campaign. It’s a guided emotional journey that starts with her Spotify habits and
+        ends with a stable ritual in her real life. For YSL, this turns “one-time buyer” into “long-term relationship”.
+      </p>
+    </section>
+
+    <footer>
+      “We’re not sending emails — we’re sending the right emotion at the right moment.”<br />
+      Concept &amp; Journey Mapping: Noor’s path · presented by Geer Chen · Northwestern University in Qatar
+    </footer>
+  </div>
+
+  <script>
+    const stages = [
+      {
+        title: "Awareness · First contact via Wrapped-style story",
+        subtitle: "Noor sees the campaign as part of her Spotify end-of-year experience.",
+        feeling:
+          "Noor is casually scrolling. She taps on a Wrapped-style story because it feels familiar and playful, not like an ad. At this point she’s curious, but not committed.",
+        brand:
+          "The brand treats this as a light-touch moment. The goal is not to sell, but to plant the idea that sound and scent can be connected.",
+        ai:
+          "AI records a soft signal: story view + click-through + a few seconds on the landing page. It does NOT push a hard sales email yet — only a gentle introduction.",
+        subject:
+          "“Your year had a soundtrack. What if it had a scent too?”",
+        email:
+          "Hi Noor,<br><br>You just opened our Scent Wrapped experience through Spotify. No rush and no countdown timers — this is simply a space where your top tracks slowly turn into something you can wear.<br><br>When you’re ready, we’ll start with your mood, not your wallet.",
+        tag: "AI trigger: first click + dwell time on landing page"
+      },
+      {
+        title: "Interest · AI recognises Noor’s pattern",
+        subtitle: "After a few sessions, Noor’s behaviour stops looking random.",
+        feeling:
+          "Over a few nights, Noor comes back to the experience and lets playlists run. She’s not ready to buy, but she’s thinking: “This actually matches how I listen at night.”",
+        brand:
+          "The brand now knows Noor is more than a passer-by. She deserves more than a generic newsletter — she gets messaging shaped around softness, night-time, and reflection.",
+        ai:
+          "AI detects slow tempo, low skips, and a night-time listening window. It classifies her as a ‘Noor-type’ persona: emotional, reflective, ritual-oriented.",
+        subject:
+          "“Your scent begins where your late-night playlist settles.”",
+        email:
+          "Noor,<br><br>Your late-night playlists tell us something important: you don’t need volume to feel everything. Soft R&B, indie vocals, and long listening sessions suggest a fragrance that stays close to you, not the room.<br><br>We’d like to show you what that sounds — and smells — like.",
+        tag: "AI trigger: pattern recognised · persona = Noor-type"
+      },
+      {
+        title: "Consideration · Emotional email, not hard sell",
+        subtitle: "Now the goal is identification, not pressure.",
+        feeling:
+          "Noor is asking herself: “Is this really for me, or is it just clever branding?” She’s willing to give more information if she feels seen, not targeted.",
+        brand:
+          "The brand responds with an email that feels like a 1:1 conversation. It invites Noor to share her mood and routine instead of pushing a “Buy now” button.",
+        ai:
+          "AI notices Noor completes a short mood quiz and scrolls through scent descriptions. Her interaction depth signals that she is open to a slightly more intimate tone.",
+        subject:
+          "“For the version of you that only appears after midnight.”",
+        email:
+          "There’s a side of you that your calendar never meets, Noor.<br><br>The one who lets playlists loop in the dark, phone face down, soft fragrance holding the room together.<br><br>This is the version we’re designing for. Tell us how your nights really feel — anxious, hopeful, calm, electric — and we’ll translate that into notes and rituals, not just a product name.",
+        tag: "AI trigger: quiz completion + long scroll on scent page"
+      },
+      {
+        title: "Decision · Invitation instead of discount spam",
+        subtitle: "Noor is close to deciding, but she doesn’t want to be pushed.",
+        feeling:
+          "She adds a fragrance to her cart, then closes the tab. She’s interested, but she hates feeling rushed or manipulated by discounts.",
+        brand:
+          "Instead of throwing a loud voucher at her, the brand respects her pace. It frames the next email as a quiet invitation, giving her something exclusive rather than shouting about price.",
+        ai:
+          "AI reads this as ‘high-intent hesitation’. Based on Noor’s profile, it chooses an early-access offer that matches her need for intimacy and control.",
+        subject:
+          "“Before it launches publicly — it belongs to you first.”",
+        email:
+          "Noor,<br><br>We saw you exploring our lavender-based scent and then stepping away — which is exactly how thoughtful decisions are made.<br><br>Instead of chasing you with codes, we saved you an early-access link. No ticking timer, no flashing banners — just a private window where you can meet the fragrance on your own terms.",
+        tag: "AI trigger: add-to-cart without purchase · high-intent score"
+      },
+      {
+        title: "Retention · Post-purchase ritual & playlist",
+        subtitle: "The relationship continues after checkout.",
+        feeling:
+          "Noor finally buys the fragrance. Now she wants to know: “How does this live in my routine? Was this worth it?”",
+        brand:
+          "The brand stops selling and starts supporting. It offers rituals, playlists, and subtle ideas for when and how to wear the scent so it becomes part of her life, not just her shelf.",
+        ai:
+          "AI sees that Noor opens post-purchase content and saves the curated playlist. Future emails prioritise mood-based content, with very gentle prompts about refills or complementary products.",
+        subject:
+          "“Now that it’s yours — here’s how to turn scent into a ritual.”",
+        email:
+          "You didn’t just buy a fragrance, Noor — you chose a mood you can return to.<br><br>We paired your scent with a ‘Soft Night Confidence’ playlist and three simple rituals: before a big presentation, after a draining day, and right before sleep.<br><br>No new purchase necessary. Just you, your music, and a scent that belongs to your night.",
+        tag: "AI trigger: purchase event + engagement with ritual content"
+      }
+    ];
+
+    function renderStage(index) {
+      const stage = stages[index];
+      const container = document.getElementById("stageContent");
+      container.innerHTML = `
+        <div class="mini-label">Stage ${String(index + 1).padStart(2, "0")} · Customer journey</div>
+        <div class="stage-title">${stage.title}</div>
+        <div class="stage-subtitle">${stage.subtitle}</div>
+
+        <div class="stage-grid">
+          <div class="stage-block">
+            <h4>What Noor feels</h4>
+            <p>${stage.feeling}</p>
+          </div>
+          <div class="stage-block">
+            <h4>What the brand & AI see</h4>
+            <p><strong>Brand view:</strong> ${stage.brand}</p>
+            <p style="margin-top:4px;"><strong>AI view:</strong> ${stage.ai}</p>
+          </div>
+        </div>
+
+        <div class="email-preview">
+          <div class="email-meta">
+            <span>From: YSL Beauty × Spotify</span>
+            <span>Subject preview</span>
+          </div>
+          <div class="email-subject">${stage.subject}</div>
+          <div class="email-body">${stage.email}</div>
+          <div class="email-tag">
+            <span class="dot"></span>
+            <span>${stage.tag}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttons = document.querySelectorAll(".step-btn");
+      buttons.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          renderStage(index);
+        });
+      });
+      // initial render
+      renderStage(0);
+    });
+  </script>
+</body>
+</html>
